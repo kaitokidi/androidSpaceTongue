@@ -1,4 +1,4 @@
-AndroidGravity
+Space Tongue Android Edition
 ==============
 
 Android Version of Space Tongue
