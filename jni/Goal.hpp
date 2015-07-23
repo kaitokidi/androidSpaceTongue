@@ -39,7 +39,7 @@ void update(float deltatime, sf::Vector2f playerPos) {
 
 void draw(sf::RenderWindow& window) {
     sprite.setPosition(position);
-    window.draw(sprite);
+    if(window.hasFocus())window.draw(sprite);
 }
 
 sf::Vector2f getPosition() const {

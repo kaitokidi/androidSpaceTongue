@@ -43,106 +43,116 @@ Scene(sf::RenderWindow* w, Level lvl)
 ~Scene() {}
 
 bool update(float deltaTime){
-    background.update(deltaTime);
-    if (menuIsActive) return false;
-    if (!player.isAlive()) {
-        timeFromDeath += deltaTime;
-        if (timeFromDeath > 0.5) {
-            finishLvl = true;
-            success = false;
+    if(window->hasFocus()){
+        background.update(deltaTime);
+        if (menuIsActive) return false;
+        if (!player.isAlive()) {
+            timeFromDeath += deltaTime;
+            if (timeFromDeath > 0.5) {
+                finishLvl = true;
+                success = false;
+            }
         }
+        player.update(deltaTime);
+        for (Chameleon &c : chameleons) c.update(deltaTime, player.getPosition());
+        goal.update(deltaTime,player.getPosition());
+
+        lookCollisions();
+
+        float offset = 50;
+        std::vector<sf::Vector2f> positions;
+        positions.push_back(goal.getPosition());
+        for(Chameleon &c : chameleons) positions.push_back(c.getPosition());
+        float maxX, minX, maxY, minY;
+        maxX = player.getPosition().x+offset;
+        minX = player.getPosition().x-offset;
+        maxY = player.getPosition().y+offset;
+        minY = player.getPosition().y-offset;
+        for(uint i = 0; i < positions.size(); ++i){
+            //maxX = max(maxX, positions[i].x + offset);
+            if(positions[i].x+offset > maxX) maxX = positions[i].x+offset;
+            if(positions[i].x-offset < minX) minX = positions[i].x-offset;
+            if(positions[i].y+offset > maxY) maxY = positions[i].y+offset;
+            if(positions[i].y-offset < minY) minY = positions[i].y-offset;
+        }
+
+        float escalatX, escalatY;
+        escalatX = window->getSize().x/(maxX-minX);
+        escalatY = window->getSize().y/(maxY-minY);
+        viewScale = std::min(escalatX, escalatY);
+        view.setCenter((maxX+minX)/2, (maxY+minY)/2);
+        view.setSize(window->getSize().x/viewScale, window->getSize().y/viewScale);
+
+        return finishLvl;
     }
-    player.update(deltaTime);
-    for (Chameleon &c : chameleons) c.update(deltaTime, player.getPosition());
-    goal.update(deltaTime,player.getPosition());
-
-    lookCollisions();
-
-    float offset = 50;
-    std::vector<sf::Vector2f> positions;
-    positions.push_back(goal.getPosition());
-    for(Chameleon &c : chameleons) positions.push_back(c.getPosition());
-    float maxX, minX, maxY, minY;
-    maxX = player.getPosition().x+offset;
-    minX = player.getPosition().x-offset;
-    maxY = player.getPosition().y+offset;
-    minY = player.getPosition().y-offset;
-    for(uint i = 0; i < positions.size(); ++i){
-        //maxX = max(maxX, positions[i].x + offset);
-        if(positions[i].x+offset > maxX) maxX = positions[i].x+offset;
-        if(positions[i].x-offset < minX) minX = positions[i].x-offset;
-        if(positions[i].y+offset > maxY) maxY = positions[i].y+offset;
-        if(positions[i].y-offset < minY) minY = positions[i].y-offset;
-    }
-
-    float escalatX, escalatY;
-    escalatX = window->getSize().x/(maxX-minX);
-    escalatY = window->getSize().y/(maxY-minY);
-    viewScale = std::min(escalatX, escalatY);
-    view.setCenter((maxX+minX)/2, (maxY+minY)/2);
-    view.setSize(window->getSize().x/viewScale, window->getSize().y/viewScale);
-
-    return finishLvl;
-
+    else return true;
 }
 
 void draw(){
-    window->setView(view);
-    background.draw(*window);
-    goal.draw(*window);
-    player.draw(*window);
-    for (Chameleon &c : chameleons) c.draw(*window);
-    for (Obstacle &o : obstacles) o.draw(*window);
-    window->setView(window->getDefaultView());
-    if (menuIsActive) iMenu.draw(*window);
-
+    if(window->hasFocus()){
+        window->setView(view);
+        background.draw(*window);
+        goal.draw(*window);
+        player.draw(*window);
+        for (Chameleon &c : chameleons) c.draw(*window);
+        for (Obstacle &o : obstacles) o.draw(*window);
+        window->setView(window->getDefaultView());
+        if (menuIsActive) iMenu.draw(*window);
+    }
 }
 
 void processEvents(){
-    sf::Event event;
-    while (window->pollEvent(event)) {
-        if (menuIsActive) iMenu.handleEvent(event);
-        switch (event.type) {
-            case sf::Event::Closed:
-                window->close();
-                exit(0);
-                break;
-            case  sf::Event::KeyPressed:
-                //Close key
-                if (event.key.code == sf::Keyboard::Escape) {
-                    menuIsActive = !menuIsActive;
-                }
-                else if (event.key.code == sf::Keyboard::R) { // Restart de lvl
-                  finishLvl = true;
-                  success = false;
-                }
-                break;
-            default:
-                break;
+    if(window->hasFocus()){
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (menuIsActive) iMenu.handleEvent(event);
+            switch (event.type) {
+                case sf::Event::Closed:
+                    window->close();
+                    exit(0);
+                    break;
+                case  sf::Event::KeyPressed:
+                    //Close key
+                    if (event.key.code == sf::Keyboard::Escape) {
+                        menuIsActive = !menuIsActive;
+                    }
+                    else if (event.key.code == sf::Keyboard::R) { // Restart de lvl
+                    finishLvl = true;
+                    success = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
-    }
-    if (menuIsActive) {
-        if (iMenu.wantToResume()) menuIsActive = false;
-        else if (iMenu.wantToMenu()) goToMenu = true;
-    }
-    else {
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-
-            sf::Vector2f mouse;
-            mouse.x = view.getCenter().x + (sf::Mouse::getPosition(*window).x - window->getSize().x/2.0) / viewScale;
-            mouse.y = view.getCenter().y + (sf::Mouse::getPosition(*window).y - window->getSize().y/2.0) / viewScale;
-
-            activeChameleon(sf::Vector2f( mouse.x, mouse.y));
+        if (menuIsActive) {
+            if (iMenu.wantToResume()) menuIsActive = false;
+            else if (iMenu.wantToMenu()) goToMenu = true;
+            else if (iMenu.wantToReset()) {
+                finishLvl = true;
+                success = false;
+                menuIsActive = false;
+            }
         }
-        if (sf::Touch::isDown(0)) {
-           
-            sf::Vector2f mouse;
-            mouse.x = view.getCenter().x + (sf::Touch::getPosition(0,*window).x - window->getSize().x/2.0) / viewScale;
-            mouse.y = view.getCenter().y + (sf::Touch::getPosition(0,*window).y - window->getSize().y/2.0) / viewScale;
+        else {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 
-            activeChameleon(sf::Vector2f( mouse.x, mouse.y));
+                sf::Vector2f mouse;
+                mouse.x = view.getCenter().x + (sf::Mouse::getPosition(*window).x - window->getSize().x/2.0) / viewScale;
+                mouse.y = view.getCenter().y + (sf::Mouse::getPosition(*window).y - window->getSize().y/2.0) / viewScale;
+
+                activeChameleon(sf::Vector2f( mouse.x, mouse.y));
+            }
+            if (sf::Touch::isDown(0)) {
+            
+                sf::Vector2f mouse;
+                mouse.x = view.getCenter().x + (sf::Touch::getPosition(0,*window).x - window->getSize().x/2.0) / viewScale;
+                mouse.y = view.getCenter().y + (sf::Touch::getPosition(0,*window).y - window->getSize().y/2.0) / viewScale;
+
+                activeChameleon(sf::Vector2f( mouse.x, mouse.y));
+            }
+            else releaseChameleon();
         }
-        else releaseChameleon();
     }
 }
 
