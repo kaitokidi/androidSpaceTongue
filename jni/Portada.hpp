@@ -28,52 +28,17 @@ Portada() {
 
 ~Portada(){}
 
-void display(sf::RenderWindow* window){
+void display(sf::RenderWindow* window, std::string pathImage, int qttyImagesX, int qttyImagesY, float time){
     open = true;
-    while(open){
-
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            switch (event.type) {
-                case sf::Event::Closed:
-                    window->close();
-                    exit(0);
-                    break;
-                case sf::Event::KeyPressed:
-                    if (event.key.code == sf::Keyboard::Escape) { window->close(); exit(0); }
-                    break;
-                case sf::Event::MouseButtonPressed:
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        open = false;
-                    }
-                default:
-                    break;
-            }
-        }
-
-
-        if(! t.loadFromFile("res/cover.png")) std::cout << "error on loading cover.png" << std::endl;
-        s.setTexture(t);
-        if(window->getSize().y/s.getGlobalBounds().height < window->getSize().x/s.getGlobalBounds().width)
-            s.scale(window->getSize().y/s.getGlobalBounds().height,window->getSize().y/s.getGlobalBounds().height);
-        else
-            s.scale(window->getSize().x/s.getGlobalBounds().width,window->getSize().x/s.getGlobalBounds().width);
-        s.setPosition(window->getSize().x/2 - s.getGlobalBounds().width/2, 0);
-        window->draw(s);
-        window->display();
-    }
-}
-
-void display(sf::RenderWindow* window, std::string pathImage){
-    open = true;
-    if(! t.loadFromFile(pathImage)) std::cout << "failed on load cover " << pathImage << std::endl;
+    if(! t.loadFromFile(pathImage)) { std::cout << "failed on load cover " << pathImage << std::endl;}
+    
     s = sf::Sprite();
-    s.setTexture(t);
+    s.setTexture(t, true);
 
-    width = 5;
-    height = 2;
+    width = qttyImagesX;
+    height = qttyImagesY;
     actualAnimation = 0;
-    timeBetweenAnimations = 0.25;
+    timeBetweenAnimations = time;
     timeSinceLastAnimation = -1.0;
 
     animationWidth = s.getGlobalBounds().width/width;
@@ -89,7 +54,7 @@ void display(sf::RenderWindow* window, std::string pathImage){
 
     sf::Clock c;
 
-    while(open){
+        while(open){
         float deltaTime = c.restart().asSeconds();
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -98,29 +63,28 @@ void display(sf::RenderWindow* window, std::string pathImage){
                 event.type == sf::Event::TouchEnded           )  open = false;
         }
 
-        timeSinceLastAnimation += deltaTime;
+        if (actualAnimation+1 < width*height) timeSinceLastAnimation += deltaTime;
         if(timeSinceLastAnimation >= timeBetweenAnimations){
-            if (actualAnimation+2  >= width*height) timeSinceLastAnimation = -2;
-            else if (actualAnimation+1  >= width*height) { /*donothing*/}
+            if (actualAnimation  >= width*height) { /*donothing*/}
             else { 
-                actualAnimation = (actualAnimation + 1);
-                if (actualAnimation == 1) timeSinceLastAnimation = -0.5;
-                else timeSinceLastAnimation = 0.0;
+                ++actualAnimation;
+//                if (actualAnimation == 1) timeSinceLastAnimation = -0.5;
+//                else timeSinceLastAnimation = 0.0;
+                  timeSinceLastAnimation = 0.0;
             }
         }
 
-
-
         window->clear();
-        if (actualAnimation+2  < width*height)
-            s.setTextureRect(sf::IntRect((actualAnimation%width)*animationWidth, (actualAnimation/width)*animationHeight, animationWidth, animationHeight));
+        if (actualAnimation  < width*height)
+            s.setTextureRect(
+                sf::IntRect(
+                    (actualAnimation%width)*animationWidth, 
+                    (actualAnimation/width)*animationHeight, 
+                            animationWidth, animationHeight));
         window->draw(s);
         window->display();
     }
-
 }
-
-
 
 };
 

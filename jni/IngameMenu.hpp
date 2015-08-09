@@ -13,7 +13,7 @@ IngameMenu() {}
 
 IngameMenu(sf::Vector2f center) :
     resume("", "res/boton_01.png", center.x/8,center.y/6),
-    reset("", "res/boton_01.png", center.x/8,center.y/6),
+    reset("", "res/button_resset.png", center.x/8,center.y/6),
     menu("", "res/boton_02.png", center.x/8,center.y/6)
 {
 

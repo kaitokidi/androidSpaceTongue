@@ -122,7 +122,8 @@ int readMaxLvl() {
 //     getline(myfile,actual);
 //     myfile.close();
 //     return my_stoi(actual);
-    return 6;
+    //TODO: HARDCODEDALERT, fa falta poder llegir i escriure de fitxers per ferho be.
+    return 11;
 }
 
 };

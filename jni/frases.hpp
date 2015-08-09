@@ -6,12 +6,9 @@
 #include <map>
 #include <vector>
 #include <string>
-// #include <istream>
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
-// #include <android/asset_manager.h>
-// #include <android/asset_manager_jni.h>
 
 #include "Portada.hpp"
 #include "Stdiobuf.hpp"
@@ -110,58 +107,18 @@ void dibujafrase(int centropantalla,int hobservador,int despobservador,
 Frases(sf::RenderWindow& window) : background(window){
 
     tiempo=0;
-    velocidad=24;
+    velocidad=20;
     if (!font.loadFromFile("res/font.otf")) {
         cout<<"no carrega la font"<<endl;
         exit(0);
     }
-    
-    
-   /*
-    
-    AAssetManager* mgr = AAssetManager_fromJava(env);
-    AAsset* asset = AAssetManager_open(mgr, (const char *) "res/frases.txt", AASSET_MODE_UNKNOWN);
-    if (NULL == asset) {
-        __android_log_print(ANDROID_LOG_ERROR, NF_LOG_TAG, "_ASSET_NOT_FOUND_");
-        return JNI_FALSE;
-    }
-    long size = AAsset_getLength(asset);
-    char* buffer = (char*) malloc (sizeof(char)*size);
-    AAsset_read (asset,buffer,size);
-    __android_log_print(ANDROID_LOG_ERROR, NF_LOG_TAG, buffer);
-    AAsset_close(asset); 
-*/
-
-   
-/*
- *NOP
- * */ /* Stdiobuf sbuf (fopen("res/frases.jpg","r"));
-   std::istream fci(&sbuf);
-   
-   
-   string linea;
-   while (getline(fci,linea))
-   frases.push_back(linea);*/
-
-  /* 
-   * NOP
-    ifstream fci("res/frases.jpg");
-    if (not fci.is_open()) {
-      Portada portada2;     portada2.display(&window, "res/piedra.png");
-        cout<<"ERROR opening frases.txt"<<endl;
-        //exit(0);
-    }
-   
-   string linea;
-   while (getline(fci,linea))
-       frases.push_back(linea);
-     */
   
     frases.push_back("  En una galaxia molt molt llunyana");
     frases.push_back("el pilot pingüí Darth Lubitz queda");
-    frases.push_back("sotmes al costat depressiu de la");
+    frases.push_back("sotmès al costat depressiu de la");
     frases.push_back("força i estabella la seva nau tot");
     frases.push_back("acabant amb la vida de 150 passatgers.");
+    frases.push_back("                                     ");
 
     frases.push_back("Els pingüins Jedi decideixen que");
     frases.push_back("això no pot tornar a passar i creen");
@@ -169,28 +126,28 @@ Frases(sf::RenderWindow& window) : background(window){
     frases.push_back("basat en uns camaleons titànics que");
     frases.push_back("funcionen com a controladors aèris,");
     frases.push_back("i que condueixen les naus al seu destí.");
-
-    frases.push_back("La teva missió sera entrenar als");
+    frases.push_back("                                     ");
+    
+    frases.push_back("La teva missió serà entrenar als");
     frases.push_back("camaleons en aquesta nova tasca,");
     frases.push_back("doncs no hi estan acostumats,");
     frases.push_back("ja que habitualment fan servir la seva");
     frases.push_back("fastigosa llengua per a capturar insectes.");
-     
+    frases.push_back("                                     "); 
+    
 }
 
 void dibujafrases(int centropantalla,int hobservador,int despobservador,int hcaracter,
-                          sf::RenderWindow &window,float delta)
-{
+                          sf::RenderWindow &window,float delta) {
     tiempo+=delta;
     int desp=50+tiempo*velocidad;
     for (int i=0;i<int(frases.size());i++)
         dibujafrase(centropantalla,hobservador,despobservador,i,desp,hcaracter,frases[i],window);
 }
 
-void run(sf::RenderWindow & window)
-{
+void run(sf::RenderWindow & window) {
     sf::Clock c;
-    while(window.isOpen() && tiempo < 25) {
+    while(window.isOpen() && tiempo < frases.size()*25/16 /*25-16  30*/) {
         float deltaTime = c.restart().asSeconds();
         sf::Event event;
         while(window.pollEvent(event)) {

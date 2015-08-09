@@ -43,7 +43,6 @@ Scene(sf::RenderWindow* w, Level lvl)
 ~Scene() {}
 
 bool update(float deltaTime){
-    if(window->hasFocus()){
         background.update(deltaTime);
         if (menuIsActive) return false;
         if (!player.isAlive()) {
@@ -84,8 +83,6 @@ bool update(float deltaTime){
         view.setSize(window->getSize().x/viewScale, window->getSize().y/viewScale);
 
         return finishLvl;
-    }
-    else return true;
 }
 
 void draw(){

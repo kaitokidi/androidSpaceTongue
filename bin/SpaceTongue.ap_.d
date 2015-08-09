@@ -18,12 +18,14 @@
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/starwars.ogg \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/font.otf \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/tongue2.png \
+/home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/credits.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/chameleon.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/button.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/End_01.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/fondo1_baja.jpg \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/goal.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/boton_01.png \
+/home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/thecredits.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/defaultFont.otf \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/defaultButton.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/levelsfile.txt \
@@ -37,6 +39,7 @@
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/Cobra2.ogg \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/lastlevel.txt \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/Cover.png \
+/home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/button_resset.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/frases.txt \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/levelButton.png \
 /home/kaito/Escriptori/GitProjects/androidSpaceTongue/assets/res/Eating.png \

@@ -1,7 +1,6 @@
 #include "Menu.hpp"
 #include "Scene.hpp"
 #include "frases.hpp"
-// #include "Editor.hpp"
 #include "Portada.hpp"
 #include "readlevels.hpp"
 #include <SFML/Graphics.hpp>
@@ -39,13 +38,14 @@ int main(){
           
      
      Portada portada;
-     portada.display(&window, "res/Cover.png");
+     portada.display(&window, "res/Cover.png",5,2,0.35);
      
+    Portada portada2;     
+    portada2.display(&window, "res/thecredits.png", 2, 2, 2);
+    
     Frases frases(window);
-    Portada portada2;     portada2.display(&window, "res/goal.png");
     frases.run(window);
     LevelManager lvlMng("res/levelsfile.txt");
-    //Editor editor(window, &lvlMng);
     Menu menu(&window);
     music.stop();
     
@@ -53,7 +53,6 @@ int main(){
     music.play();
     music.setLoop(true);
 
-    // Aqui tendrá que ir el menú {
     while (true) {
         int currentLvl = menu.run();
         if (currentLvl >= 0) {
@@ -68,14 +67,6 @@ int main(){
                 }
             }
         }
-//         else if (currentLvl == -1) { // Editor de niveles
-//             while (int status = editor.run()) {
-//                 if (status == 1) {
-//                     Scene mygame(&window, editor.getCurrentLvl());
-//                     (void) mygame.run();
-//                 }
-//             }
-//         }
     }
     music.stop();
 }
