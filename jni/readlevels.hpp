@@ -16,7 +16,7 @@
 using namespace std;
 
 void readlevels(std::vector<std::string> &text){
-text.push_back(" inicio 710 472 " ); 
+text.push_back(" inicio 710 272 " ); 
 text.push_back(" final 1167 461 " ); 
 text.push_back(" velocidad 0 100 " ); 
 text.push_back(" camaleon 908 459 0 " ); 
